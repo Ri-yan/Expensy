@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "Expensy",
+    "slug": "Expensy",
+    "version": "1.0.0",
+    "orientation": "portrait",
+    "icon": "./assets/expensy.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/expency.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#ffffff"
+    },
+    "assetBundlePatterns": [
+      "**/*"
+    ],
+    "ios": {
+      "supportsTablet": true
+    },
+    "android": {
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/expency.png",
+        "backgroundColor": "#ffffff"
+      }
+    },
+    "web": {
+      "favicon": "./assets/expency.png"
+    }
+  }
+}
