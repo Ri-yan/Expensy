@@ -109,6 +109,7 @@ const styles = StyleSheet.create({
     marginVertical: 24,
   },
   buttons: {
+    marginTop:100,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",

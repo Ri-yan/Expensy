@@ -29,7 +29,7 @@ const ExpensesOverView = () => {
       screenOptions={({ navigation }) => ({
         headerStyle: { backgroundColor: Colors.primaryNav },
         headerTintColor: Colors.primaryNavIcon,
-        tabBarStyle: { backgroundColor: Colors.primaryNav, marginBottom: 10 },
+        tabBarStyle: { backgroundColor: Colors.primaryNav, paddingBottom: 8 },
         tabBarActiveTintColor: Colors.primaryNavIcon,
         headerRight: ({ tintColor }) => (
           <IconButton
