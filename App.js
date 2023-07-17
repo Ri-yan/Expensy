@@ -10,9 +10,7 @@ import { Colors } from "./constants/Colors";
 import { Ionicons } from "@expo/vector-icons";
 import IconButton from "./src/components/ui/IconButton";
 import ExpensesContextProvider from "./store/Expenses-context";
-// import { createDrawerNavigator } from '@react-navigation/drawer';
 
-// const Drawer = createDrawerNavigator();
 const Stack = createNativeStackNavigator();
 const BottomTabs = createBottomTabNavigator();
 
@@ -98,12 +96,3 @@ export default function App() {
     </>
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {
-//     flex: 1,
-//     backgroundColor: "#fff",
-//     alignItems: "center",
-//     justifyContent: "center",
-//   },
-// });
