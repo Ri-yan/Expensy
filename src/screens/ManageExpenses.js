@@ -18,8 +18,14 @@ import PrimaryButton from "../components/ui/PrimaryButton.js";
 import { ExpensesContext } from "../../store/Expenses-context.js";
 import { Colors } from "../../constants/Colors.js";
 import ExpenseForm from "../components/ManageExpense/ExpenseForm.js";
+import { storeExpense, updateExpense, deleteExpense } from "../util/http.js";
+import Loading from "../components/ui/Loading.js";
+import ErrorOverlay from "../components/ui/ErrorOverlay.js";
 
 export default function ManageExpenses({ navigation, route }) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+
   const editedExpenseId = route.params?.expenseId;
   const isEditing = !!editedExpenseId;
   const expenseCtx = useContext(ExpensesContext);
@@ -29,23 +35,47 @@ export default function ManageExpenses({ navigation, route }) {
     });
   }, [navigation, isEditing]);
   const deleteExpense = () => {
-    expenseCtx.deleteExpenses(editedExpenseId);
+    expenseCtx.deleteExpense(editedExpenseId);
+    deleteExpense(editedExpenseId);
     navigation.goBack();
   };
   const cancelHandler = () => {
     navigation.goBack();
   };
-  const confirmHandler = (expenseData) => {
+  const confirmHandler = async (expenseData) => {
     if (isEditing) {
-      expenseCtx.updateExpense(editedExpenseId, expenseData);
+      setIsLoading(true);
+      try {
+        await updateExpense(editedExpenseId, expenseData);
+        expenseCtx.updateExpense(editedExpenseId, expenseData);
+      } catch (error) {
+        setError("Could not update expenses");
+      }
+      setIsLoading(false);
     } else {
-      expenseCtx.addExpense(expenseData);
+      setIsLoading(true);
+      try {
+        const id = await storeExpense(expenseData);
+        expenseCtx.addExpense({ ...expenseData, id: id });
+      } catch (error) {
+        setError("Could not add expenses");
+      }
+      setIsLoading(false);
     }
     navigation.goBack();
   };
   const selectedExpense = expenseCtx.expenses.find(
     (expense) => expense.id === editedExpenseId
   );
+  if (isLoading) {
+    return <Loading />;
+  }
+  function errorHandler() {
+    setError(null);
+  }
+  if (error && !isLoading) {
+    return <ErrorOverlay message={error} onConfirm={errorHandler} />;
+  }
   return (
     <View style={styles.container}>
       <ExpenseForm
