@@ -18,16 +18,11 @@ import PrimaryButton from "../components/ui/PrimaryButton.js";
 import { ExpensesContext } from "../../store/Expenses-context.js";
 import { Colors } from "../../constants/Colors.js";
 import ExpenseForm from "../components/ManageExpense/ExpenseForm.js";
-import {
-  storeExpense,
-  updateExpense,
-  deleteExpense,
-  deleteExpenseFromFB,
-} from "../util/http.js";
+import { storeExpense, updateExpense, deleteExpense } from "../util/http.js";
 import Loading from "../components/ui/Loading.js";
 import ErrorOverlay from "../components/ui/ErrorOverlay.js";
 
-export default function ManageExpenses({ navigation, route }) {
+export default function ProfileScreen({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -39,9 +34,9 @@ export default function ManageExpenses({ navigation, route }) {
       title: isEditing ? "Edit Expense" : "Add Expense",
     });
   }, [navigation, isEditing]);
-  const deleteExpenseHandler = () => {
+  const deleteExpense = () => {
     expenseCtx.deleteExpense(editedExpenseId);
-    deleteExpenseFromFB(editedExpenseId);
+    deleteExpense(editedExpenseId);
     navigation.goBack();
   };
   const cancelHandler = () => {
@@ -51,10 +46,7 @@ export default function ManageExpenses({ navigation, route }) {
     if (isEditing) {
       setIsLoading(true);
       try {
-        await updateExpense(editedExpenseId, {
-          ...expenseData,
-          userId: expenseCtx.token,
-        });
+        await updateExpense(editedExpenseId, expenseData);
         expenseCtx.updateExpense(editedExpenseId, expenseData);
       } catch (error) {
         setError("Could not update expenses");
@@ -63,15 +55,8 @@ export default function ManageExpenses({ navigation, route }) {
     } else {
       setIsLoading(true);
       try {
-        const id = await storeExpense({
-          ...expenseData,
-          userId: expenseCtx.token,
-        });
-        expenseCtx.addExpense({
-          ...expenseData,
-          id: id,
-          userId: expenseCtx.token,
-        });
+        const id = await storeExpense(expenseData);
+        expenseCtx.addExpense({ ...expenseData, id: id });
       } catch (error) {
         setError("Could not add expenses");
       }
@@ -91,25 +76,12 @@ export default function ManageExpenses({ navigation, route }) {
   if (error && !isLoading) {
     return <ErrorOverlay message={error} onConfirm={errorHandler} />;
   }
+  function LogOut() {
+    expenseCtx.logout();
+  }
   return (
     <View style={styles.container}>
-      <ExpenseForm
-        confirmHandler={confirmHandler}
-        submitButtonLable={isEditing ? "Update" : "Add"}
-        cancelHandler={cancelHandler}
-        defaultValue={selectedExpense}
-      />
-
-      {isEditing && (
-        <View style={styles.deleteContainer}>
-          <IconButton
-            icon="trash"
-            size={24}
-            color={Colors.primaryNavIcon}
-            pressButton={deleteExpenseHandler}
-          />
-        </View>
-      )}
+      <PrimaryButton pressButton={LogOut}>Logout</PrimaryButton>
     </View>
   );
 }
@@ -118,6 +90,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
+    justifyContent: "center",
     backgroundColor: Colors.primaryBackground,
   },
   deleteContainer: {

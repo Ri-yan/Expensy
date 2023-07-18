@@ -11,6 +11,7 @@ import {
   FlatList,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import { Colors } from "../../../constants/Colors";
 
 export default function PrimaryButton({ children, pressButton, mode }) {
   return (
@@ -38,7 +39,7 @@ const styles = StyleSheet.create({
   button: {
     borderRadius: 4,
     padding: 8,
-    backgroundColor: "green",
+    backgroundColor: Colors.primaryNavIcon,
   },
   buttonText: {
     color: "white",

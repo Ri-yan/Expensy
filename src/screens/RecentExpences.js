@@ -27,9 +27,10 @@ export default function RecentExpenses() {
 
   useEffect(() => {
     async function getExpenses() {
-      setIsLoading(true);
       try {
-        const expenses = await fetchExpenses();
+        setIsLoading(true);
+        console.log(expensesCtx.token)
+        const expenses = await fetchExpenses(expensesCtx.token);
         expensesCtx.setExpenses(expenses);
         setIsLoading(false);
       } catch (error) {

@@ -1,11 +1,15 @@
-import { createContext, useReducer } from "react";
-
+import { createContext, useEffect, useReducer, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 export const ExpensesContext = createContext({
   expenses: [],
-  addExpense: ({ description, amount, date }) => {},
+  addExpense: ({ description, amount, date, userId }) => {},
   setExpenses: (expenses) => {},
   deleteExpense: (id) => {},
   updateExpense: (id, { description, amount, date }) => {},
+  token: "",
+  isAuthenticated: false,
+  authenticate: () => {},
+  logout: () => {},
 });
 
 function expenseReducer(state, action) {
@@ -25,7 +29,7 @@ function expenseReducer(state, action) {
     case "DELETE":
       return state.filter((expense) => expense.id !== action.payload);
     case "SET":
-      const invertedArray =action.payload.reverse() 
+      const invertedArray = action.payload.reverse();
       return invertedArray;
     default:
       return state;
@@ -33,6 +37,16 @@ function expenseReducer(state, action) {
 }
 export default function ExpensesContextProvider({ children }) {
   const [expenseState, dispatch] = useReducer(expenseReducer, []);
+  const [authToken, setAuthToken] = useState();
+  useEffect(() => {
+    async function fetchToken() {
+      const storedToken = await AsyncStorage.getItem("token");
+      if (storedToken) {
+        setAuthToken(storedToken);
+      }
+    }
+    fetchToken();
+  }, []);
   function addExpense(expenseData) {
     dispatch({ type: "ADD", payload: expenseData });
   }
@@ -45,12 +59,24 @@ export default function ExpensesContextProvider({ children }) {
   function updateExpense(id, expenseData) {
     dispatch({ type: "UPDATE", payload: { id: id, data: expenseData } });
   }
+  function authenticate(token) {
+    setAuthToken(token);
+    AsyncStorage.setItem("token", token);
+  }
+  function logout() {
+    setAuthToken(null);
+    AsyncStorage.removeItem("token");
+  }
   const value = {
     expenses: expenseState,
     addExpense: addExpense,
     deleteExpense: deleteExpense,
     updateExpense: updateExpense,
     setExpenses: setExpenses,
+    token: authToken,
+    isAuthenticated: !!authToken,
+    authenticate: authenticate,
+    logout: logout,
   };
   return (
     <ExpensesContext.Provider value={value}>

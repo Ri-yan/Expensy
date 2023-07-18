@@ -48,7 +48,7 @@ export default function ExpenseForm({
     confirmHandler(expenseData);
   }
   return (
-    <View style={styles.forrm}>
+    <View style={styles.form}>
       <Text style={styles.title}>Your Expense</Text>
       <View style={styles.inputsRow}>
         <InputFields
@@ -97,7 +97,7 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     justifyContent: "space-between",
   },
-  forrm: {
+  form: {
     marginTop: 80,
   },
   title: {
@@ -109,7 +109,7 @@ const styles = StyleSheet.create({
     marginVertical: 24,
   },
   buttons: {
-    marginTop:100,
+    marginTop: 100,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
