@@ -16,6 +16,7 @@ import LoginScreen from "./src/screens/AuthScreens/LoginScreen";
 import SignUpScreen from "./src/screens/AuthScreens/SignUpScreen";
 import ProfileScreen from "./src/screens/ProfileScreen";
 import { useContext } from "react";
+import MapScreen from "./src/screens/MapScreen";
 // import { createDrawerNavigator } from "@react-navigation/drawer";
 
 // const Drawer = createDrawerNavigator();
@@ -128,6 +129,11 @@ function AuthenticatedNavigations() {
       <Stack.Screen
         name="ManageExpenses"
         component={ManageExpenses}
+        options={{ presentation: "modal" }}
+      ></Stack.Screen>
+       <Stack.Screen
+        name="map"
+        component={MapScreen}
         options={{ presentation: "modal" }}
       ></Stack.Screen>
     </Stack.Navigator>

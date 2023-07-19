@@ -15,17 +15,25 @@ import { Ionicons } from "@expo/vector-icons";
 import InputFields from "./InputFields";
 import { Colors } from "../../../constants/Colors";
 import PrimaryButton from "../ui/PrimaryButton";
+import ImagePicker from "../ImagePicker";
+import IconButton from "../ui/IconButton";
+import GeoLocation from "../GeoLocation";
 export default function ExpenseForm({
   cancelHandler,
   submitButtonLable,
   confirmHandler,
   defaultValue,
+  isEditing,
+  deleteExpenseHandler,
 }) {
   const [inputValue, setInputVAlue] = useState({
     amount: defaultValue ? defaultValue.amount.toString() : "",
     date: defaultValue ? defaultValue.date.toISOString().slice(0, 10) : "",
     description: defaultValue ? defaultValue.description.toString() : "",
   });
+  const [getLocation, setGetLocation] = useState(null);
+  const [getImage, setGetImage] = useState(null);
+
   function inputChangeHandler(inputIdentifier, enteredValue) {
     setInputVAlue((currValue) => {
       return { ...currValue, [inputIdentifier]: enteredValue };
@@ -37,6 +45,8 @@ export default function ExpenseForm({
       amount: +inputValue.amount,
       date: new Date(inputValue.date),
       description: inputValue.description,
+      image: getImage,
+      location: getLocation,
     };
     const amountValid = !isNaN(expenseData.amount) && expenseData.amount > 0;
     const dateValid = expenseData.date.toString() !== "Invalid Date";
@@ -49,7 +59,23 @@ export default function ExpenseForm({
   }
   return (
     <View style={styles.form}>
-      <Text style={styles.title}>Your Expense</Text>
+      <View style={styles.head_title}>
+        <View>
+          <Text></Text>
+        </View>
+        <Text style={styles.title}>Your Expense</Text>
+        {isEditing && (
+          <View style={styles.deleteContainer}>
+            <IconButton
+              icon="trash"
+              size={24}
+              color={Colors.primaryNavIcon}
+              pressButton={deleteExpenseHandler}
+            />
+          </View>
+        )}
+      </View>
+
       <View style={styles.inputsRow}>
         <InputFields
           label="Amount"
@@ -80,6 +106,8 @@ export default function ExpenseForm({
           value: inputValue.description,
         }}
       />
+      <ImagePicker setGetImage={setGetImage} />
+      <GeoLocation setGetLocation={setGetLocation} />
       <View style={styles.buttons}>
         <PrimaryButton mode="flat" pressButton={cancelHandler}>
           Cancel
@@ -88,17 +116,20 @@ export default function ExpenseForm({
           {submitButtonLable}
         </PrimaryButton>
       </View>
+      {/* <ImagePicker/> */}
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   inputsRow: {
+    flex: 1,
     flexDirection: "row",
     justifyContent: "space-between",
   },
   form: {
-    marginTop: 80,
+    flex: 1,
+    marginTop: 5,
   },
   title: {
     marginTop: 40,
@@ -106,10 +137,11 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     color: Colors.primaryNavIcon,
     textAlign: "center",
+    marginStart: 35,
     marginVertical: 24,
   },
   buttons: {
-    marginTop: 100,
+    marginTop: 20,
     flexDirection: "row",
     justifyContent: "center",
     alignItems: "center",
@@ -117,5 +149,10 @@ const styles = StyleSheet.create({
   button: {
     minWidth: 120,
     marginHorizontal: 8,
+  },
+  head_title: {
+    flexDirection: "row",
+    alignItems: "baseline",
+    justifyContent: "space-between",
   },
 });

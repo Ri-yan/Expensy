@@ -30,7 +30,7 @@ const styles = StyleSheet.create({
     borderRadius: 24,
     padding: 6,
     margin: 8,
-    elevation: 2,
+    elevation: 0,
     marginHorizontal: 8,
   },
   pressed: {

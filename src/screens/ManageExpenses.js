@@ -26,6 +26,8 @@ import {
 } from "../util/http.js";
 import Loading from "../components/ui/Loading.js";
 import ErrorOverlay from "../components/ui/ErrorOverlay.js";
+import ImagePicker from "../components/ImagePicker.js";
+import GeoLocation from "../components/GeoLocation.js";
 
 export default function ManageExpenses({ navigation, route }) {
   const [isLoading, setIsLoading] = useState(false);
@@ -77,6 +79,7 @@ export default function ManageExpenses({ navigation, route }) {
       }
       setIsLoading(false);
     }
+    console.log(expenseData)
     navigation.goBack();
   };
   const selectedExpense = expenseCtx.expenses.find(
@@ -92,25 +95,36 @@ export default function ManageExpenses({ navigation, route }) {
     return <ErrorOverlay message={error} onConfirm={errorHandler} />;
   }
   return (
-    <View style={styles.container}>
-      <ExpenseForm
-        confirmHandler={confirmHandler}
-        submitButtonLable={isEditing ? "Update" : "Add"}
-        cancelHandler={cancelHandler}
-        defaultValue={selectedExpense}
-      />
-
-      {isEditing && (
-        <View style={styles.deleteContainer}>
-          <IconButton
-            icon="trash"
-            size={24}
-            color={Colors.primaryNavIcon}
-            pressButton={deleteExpenseHandler}
-          />
-        </View>
-      )}
-    </View>
+    <ScrollView
+      style={{
+        flex: 1,
+        height: "100%",
+        backgroundColor: Colors.primaryBackground,
+      }}
+    >
+      <View style={styles.container}>
+        {/* {isEditing && (
+          <View style={styles.deleteContainer}>
+            <IconButton
+              icon="trash"
+              size={24}
+              color={Colors.primaryNavIcon}
+              pressButton={deleteExpenseHandler}
+            />
+          </View>
+        )} */}
+        <ExpenseForm
+          confirmHandler={confirmHandler}
+          submitButtonLable={isEditing ? "Update" : "Add"}
+          cancelHandler={cancelHandler}
+          defaultValue={selectedExpense}
+          deleteExpenseHandler={deleteExpenseHandler}
+          isEditing={isEditing}
+        />
+        {/* <ImagePicker />
+        <GeoLocation /> */}
+      </View>
+    </ScrollView>
   );
 }
 
@@ -118,14 +132,14 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 24,
-    backgroundColor: Colors.primaryBackground,
+    // backgroundColor: Colors.primaryBackground,
   },
   deleteContainer: {
     marginTop: 16,
     padding: 8,
-    borderTopWidth: 2,
-    borderTopColor: "purple",
-    borderTopWidth: 2,
+    borderBottomWidth: 2,
+    borderBottomColor: "purple",
+    borderBottomWidth: 2,
     alignItems: "center",
   },
 });

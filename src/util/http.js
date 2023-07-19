@@ -61,6 +61,43 @@ export async function Login(email, password) {
     }
   );
   console.log(response.data);
+
   const token = response.data.localId;
   return token;
+}
+
+const mapsKey =
+  "AIzaSyA3kg7YWugGl1lTXmAmaBGPNhDW9pEh5bo&signature=GJnbP6sQrFY1ce8IsvG2WR2P0Jw=";
+
+export function GetLocationPreview(lat, lng) {
+  const imagePreview = `https://maps.googleapis.com/maps/api/staticmap?center=${lat},${lng}&zoom=13&size=400x300&maptype=roadmap
+&markers=color:red%7Clabel:S%7C${lat},${lng}
+&key=${mapsKey}`;
+
+  return "https://i0.wp.com/www.cssscript.com/wp-content/uploads/2018/03/Simple-Location-Picker.png?fit=561%2C421&ssl=1";
+}
+
+async function uploadImageToFirebaseStorage(imageFile, accessToken) {
+  const firebaseStorageUrl =
+    "https://firebasestorage.googleapis.com/v0/b/YOUR_PROJECT_ID.appspot.com/o";
+  const storageRef = "/Expency/reciepts"; // Set the desired storage path
+
+  const response = await fetch(`${firebaseStorageUrl}${storageRef}`, {
+    method: "POST",
+    headers: {
+      Authorization: `Bearer ${accessToken}`,
+      "Content-Type": "image/jpeg", // Set the appropriate content type for your image
+    },
+    body: imageFile,
+  });
+
+  if (!response.ok) {
+    throw new Error("Failed to upload image to Firebase Storage");
+  }
+
+  const responseData = await response.json();
+  const downloadUrl = responseData.downloadTokens;
+
+  // The downloadUrl contains the path of the uploaded file on Firebase Storage
+  return downloadUrl;
 }

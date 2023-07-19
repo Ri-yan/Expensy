@@ -67,6 +67,7 @@ export default function AuthForm({ mode, submit, credentialsInvalid }) {
             textInputConfig={{
               autoCorrect: false,
               autoCapatalize: "none",
+              secureTextEntry: true,
               onChangeText: inputChangeHandler.bind(this, "password"),
               value: inputValue.password,
             }}
@@ -79,6 +80,7 @@ export default function AuthForm({ mode, submit, credentialsInvalid }) {
               textInputConfig={{
                 autoCorrect: false,
                 autoCapatalize: "none",
+                secureTextEntry: true,
                 onChangeText: inputChangeHandler.bind(this, "confirm_password"),
                 value: inputValue.confirm_password,
               }}
